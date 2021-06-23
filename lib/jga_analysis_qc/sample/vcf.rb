@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require '../chr_region'
-require 'vcf/bcftools_stats'
+
+require_relative '../chr_region'
+require_relative '../vcf/bcftools_stats'
 
 module VCReport
   module Report

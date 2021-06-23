@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="github-markdown.css">
+    <link rel="stylesheet" href="c3.css">
+    <script src="d3.v5.js"></script>
+    <script src="c3.js"></script>
+    <style>
+      .markdown-body {
+	  box-sizing: border-box;
+	  min-width: 200px;
+	  max-width: 980px;
+	  margin: 0 auto;
+	  padding: 45px;
+      }
+
+      @media (max-width: 767px) {
+	  .markdown-body {
+	      padding: 15px;
+	  }
+      }
+    </style>
+  </head>
+  <body>
+    <article class="markdown-body">
+      <h1>Dashboard</h1>
+      <%= toc_body -%>
+      <%= content_body %>
+    </article>
+  </body>
+</html>

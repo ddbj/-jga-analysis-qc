@@ -2,7 +2,7 @@
 
 require 'pathname'
 require_relative '../../report/table'
-require_relative '../../report/sample/cram/picard_collect_wgs_metrics'
+require_relative 'picard_collect_wgs_metrics'
 
 module VCReport
   module Report

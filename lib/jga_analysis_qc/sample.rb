@@ -6,7 +6,7 @@ require 'pathname'
 require_relative 'settings'
 require_relative 'sample/vcf_collection'
 require_relative 'sample/cram'
-require_relative 'render'
+require_relative 'report/render'
 
 module VCReport
   module Report

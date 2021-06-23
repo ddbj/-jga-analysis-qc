@@ -3,20 +3,18 @@
 require 'pathname'
 
 module JgaAnalysisQC
-  module Report
-    class ChrRegion
-      # @return [Symbol]
-      attr_reader :id
+  class ChrRegion
+    # @return [Symbol]
+    attr_reader :id
 
-      # @return [String]
-      attr_reader :label
+    # @return [String]
+    attr_reader :label
 
-      # @param id    [String, Symbol]
-      # @param label [String]
-      def initialize(id, label = nil)
-        @id = id.to_sym
-        @label = label || @id.to_s
-      end
+    # @param id    [String, Symbol]
+    # @param label [String]
+    def initialize(id, label = nil)
+      @id = id.to_sym
+      @label = label || @id.to_s
     end
   end
 end

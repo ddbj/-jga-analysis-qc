@@ -3,7 +3,7 @@
 require 'fileutils'
 
 require_relative '../chr_region'
-require_relative '../vcf/bcftools_stats'
+require_relative 'vcf/bcftools_stats'
 
 module VCReport
   module Report

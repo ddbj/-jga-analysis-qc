@@ -6,8 +6,8 @@ require 'redcarpet'
 require 'thor'
 require 'fileutils'
 
-require '../settings'
-require 'paging'
+require_relative '../settings'
+require_relative 'paging'
 
 module JgaAnalysisQC
   module Report

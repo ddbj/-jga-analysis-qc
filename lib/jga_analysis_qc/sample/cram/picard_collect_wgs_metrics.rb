@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'pathname'
-require '../../chr_region'
-require '../../report/table'
+
+require_relative '../../chr_region'
+require_relative '../../report/table'
 
 module VCReport
   module Report

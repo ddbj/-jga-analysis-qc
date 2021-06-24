@@ -13,8 +13,8 @@ module JgaAnalysisQC
       end
 
       desc 'report [DIR] [SAMPLE LIST]', 'Produce a report on per-sample workflow results'
-      def report(_dir, sample_list_path)
-        Report.run(sample_list_path, region_list_path)
+      def report(result_dir, sample_list_path)
+        Report.run(result_dir, sample_list_path)
       end
     end
   end

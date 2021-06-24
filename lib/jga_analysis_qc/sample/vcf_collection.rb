@@ -50,11 +50,11 @@ module JgaAnalysisQC
           type = %i[string verbatim]
           rows =
             @vcfs.filter_map do |vcf|
-            path = yield vcf
-            next unless path
+              path = yield vcf
+              next unless path
 
-            [vcf.chr_region.desc, File.expand_path(path)]
-          end
+              [vcf.chr_region.desc, File.expand_path(path)]
+            end
           Table.new(header, rows, type)
         end
       end

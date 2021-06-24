@@ -10,9 +10,9 @@ module VCReport
       class Cram
         class SamtoolsIdxstats
           TABLE_COLUMNS = [
-            ['chr. region',         :name,         :string],
-	    ['# of mapped reads',   :num_mapped,   :integer],
-	    ['# of unmapped reads', :num_unmapped, :integer]
+            ['chr. region', :name, :string],
+            ['# of mapped reads',   :num_mapped,   :integer],
+            ['# of unmapped reads', :num_unmapped, :integer]
           ].freeze
 
           class Chromosome

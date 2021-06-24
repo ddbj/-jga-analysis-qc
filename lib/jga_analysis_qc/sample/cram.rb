@@ -28,12 +28,12 @@ module JgaAnalysisQC
         # @param picard_collect_wgs_metrics_collection     [PicardCollectWgsMetricsCollection]
         # @param picard_collect_base_distribution_by_cycle [PicardCollectBaseDistributionByCycle, nil]
         def initialize(
-              cram_path,
-              samtools_idxstats,
-              samtools_flagstat,
-              picard_collect_wgs_metrics_collection,
-              picard_collect_base_distribution_by_cycle
-            )
+          cram_path,
+          samtools_idxstats,
+          samtools_flagstat,
+          picard_collect_wgs_metrics_collection,
+          picard_collect_base_distribution_by_cycle
+        )
           @cram_path = cram_path
           @samtools_idxstats = samtools_idxstats
           @samtools_flagstat = samtools_flagstat

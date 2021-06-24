@@ -181,7 +181,7 @@ module VCReport
               lines.slice_before(regexp).map do |chunk|
                 chunk.reject! { |line| line =~ /^\s*$/ }
                 chunk.shift =~ regexp
-                Section.new($1, $2, chunk.join("\n"))
+                Section.new(Regexp.last_match(1), Regexp.last_match(2), chunk.join("\n"))
               end
             end
 
@@ -192,7 +192,7 @@ module VCReport
                 str,
                 col_sep: "\t",
                 headers: true,
-                 converters: :numeric,
+                converters: :numeric,
                 header_converters: :symbol
               )
             end
@@ -211,7 +211,7 @@ module VCReport
               )
               percent_excluded = parse_percent_excluded(row)
               percent_coverage = row.filter_map do |k, v|
-                [$1.to_i, v] if k =~ /^pct_(\d+)x$/
+                [Regexp.last_match(1).to_i, v] if k =~ /^pct_(\d+)x$/
               end.to_h
               het_snp = PicardCollectWgsMetrics::HetSnp.new(
                 *row.values_at(*%w[sensitivity q].map { |k| :"het_snp_#{k}" })
@@ -224,8 +224,8 @@ module VCReport
             def parse_percent_excluded(row)
               params =
                 PicardCollectWgsMetrics::PercentExcluded::FIELDS.map.to_h do |k|
-                [k, row[:"pct_exc_#{k}"]]
-              end
+                  [k, row[:"pct_exc_#{k}"]]
+                end
               PicardCollectWgsMetrics::PercentExcluded.new(**params)
             end
 

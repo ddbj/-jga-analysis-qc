@@ -12,10 +12,10 @@ require_relative 'sample/vcf/bcftools_stats'
 module JgaAnalysisQC
   module Report
     HAPLOTYPECALLER_REGIONS = [
-      ChrRegion.new("autosome-PAR",       "autosome-PAR"),
-      ChrRegion.new("chrX-nonPAR-male",   "chrX-nonPAR (male)"),
-      ChrRegion.new("chrX-nonPAR-female", "chrX-nonPAR (female)"),
-      ChrRegion.new("chrY-nonPAR",        "chrY-nonPAR")
+      ChrRegion.new('autosome-PAR',       'autosome-PAR'),
+      ChrRegion.new('chrX-nonPAR-male',   'chrX-nonPAR (male)'),
+      ChrRegion.new('chrX-nonPAR-female', 'chrX-nonPAR (female)'),
+      ChrRegion.new('chrY-nonPAR',        'chrY-nonPAR')
     ].freeze
     WGS_METRICS_REGIONS = [
       WGS_METRICS_AUTOSOME_REGION,

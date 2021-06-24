@@ -26,14 +26,14 @@ module JgaAnalysisQC
         # @param toc_nesting_level [Integer, nil]
         # @return                  [Pathname] HTML path
         def run(
-              prefix,
-              out_dir,
-              context = nil,
-              paging: nil,
-              overwrite: true,
-              use_markdown: true,
-              toc_nesting_level: nil
-            )
+          prefix,
+          out_dir,
+          context = nil,
+          paging: nil,
+          overwrite: true,
+          use_markdown: true,
+          toc_nesting_level: nil
+        )
           if use_markdown
             render_markdown(
               prefix, out_dir, context, paging: paging, overwrite: overwrite
@@ -126,7 +126,7 @@ module JgaAnalysisQC
           end
           template_path = "#{TEMPLATE_DIR}/#{prefix}.md.erb"
           render_erb(template_path, markdown_path, context) do |text|
-            text.scan(/(!\[([^\]]*)\]\(([^\)]+)\))/).map do |pattern, label, path|
+            text.scan(/(!\[([^\]]*)\]\(([^)]+)\))/).map do |pattern, label, path|
               dst_path = out_dir / File.basename(path)
               Render.copy_file(path, out_dir) unless dst_path.exist?
               [pattern, "![#{label}](#{dst_path.basename})"]
@@ -147,22 +147,20 @@ module JgaAnalysisQC
         # @param toc_nesting_level [Integer, nil]
         # @return                  [Pathname]
         def render_html(
-              prefix,
-              out_dir,
-              context = nil,
-              paging: nil,
-              overwrite: true,
-              use_markdown: true,
-              toc_nesting_level: nil
-            )
+          prefix,
+          out_dir,
+          context = nil,
+          paging: nil,
+          overwrite: true,
+          use_markdown: true,
+          toc_nesting_level: nil
+        )
           filename = "#{prefix}#{paging&.digits}"
           html_path = out_dir / "#{filename}.html"
           return if skip?(html_path, overwrite)
 
           context ||= binding
-          if use_markdown
-            set_markdown_variable_to_context(context, html_path, toc_nesting_level)
-          end
+          set_markdown_variable_to_context(context, html_path, toc_nesting_level) if use_markdown
           template_path = "#{TEMPLATE_DIR}/#{prefix}.html.erb"
           render_erb(template_path, html_path, context)
           html_path
@@ -172,8 +170,8 @@ module JgaAnalysisQC
         # @param html_path         [String]
         # @param toc_nesting_level [Integer, nil]
         def set_markdown_variable_to_context(
-              context, html_path, toc_nesting_level = nil
-            )
+          context, html_path, toc_nesting_level = nil
+        )
           markdown_path = html_path.sub_ext('.md')
           markdown_text = File.read(markdown_path)
           context.local_variable_set(:content_body, content_html(markdown_text))

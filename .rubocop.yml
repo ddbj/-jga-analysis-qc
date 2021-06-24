@@ -1,5 +1,9 @@
 AllCops:
   TargetRubyVersion: 3.0
+  Exclude:
+    - lib/c3/**/*
+    - lib/d3/**/*
+    - lib/github-markdown-css/**/*
 
 Style/StringLiterals:
   Enabled: true

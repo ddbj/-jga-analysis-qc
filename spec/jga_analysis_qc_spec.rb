@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe JgaAnalysisQc do
+RSpec.describe JgaAnalysisQC do
   it 'has a version number' do
-    expect(JgaAnalysisQc::VERSION).not_to be nil
+    expect(JgaAnalysisQC::VERSION).not_to be nil
   end
 
   #  it "does something useful" do

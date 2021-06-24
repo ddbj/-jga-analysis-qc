@@ -4,7 +4,7 @@ require_relative 'lib/jga_analysis_qc/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'jga_analysis_qc'
-  spec.version       = JgaAnalysisQc::VERSION
+  spec.version       = JgaAnalysisQC::VERSION
   spec.authors       = ['Takeshi Fujino']
   spec.email         = ['fujino@edu.k.u-tokyo.ac.jp']
 

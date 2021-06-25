@@ -1,34 +1,34 @@
 ## VCF metrics
 
-<%= sample.vcf_collection.vcf_path_table&.markdown_text %>
+<%= @vcf_collection.vcf_path_table&.markdown_text %>
 
 ### bcftools stats
 
-<%= sample.vcf_collection.bcftools_stats_path_table&.markdown_text %>
+<%= @vcf_collection.bcftools_stats_path_table&.markdown_text %>
 
-<%= sample.vcf_collection.bcftools_stats_table&.markdown_text -%>
+<%= @vcf_collection.bcftools_stats_table&.markdown_text -%>
 
 ## CRAM metrics
 
-<%= sample.cram.path_table.markdown_text %>
+<%= @cram.path_table.markdown_text %>
 
 ### samtools idxstats
 
-<%= sample.cram.samtools_idxstats&.path_table&.markdown_text -%>
+<%= @cram.samtools_idxstats&.path_table&.markdown_text -%>
 
-<%= sample.cram.samtools_idxstats&.num_reads_table&.markdown_text -%>
+<%= @cram.samtools_idxstats&.num_reads_table&.markdown_text -%>
 
 ### samtools flagstat
 
-<%= sample.cram.samtools_flagstat&.path_table&.markdown_text -%>
+<%= @cram.samtools_flagstat&.path_table&.markdown_text -%>
 
-<%= sample.cram.samtools_flagstat&.num_reads_table&.markdown_text -%>
+<%= @cram.samtools_flagstat&.num_reads_table&.markdown_text -%>
 
 ### picard CollectWgsMetrics
 
 [Metrics Definitions (Broad Institute)](https://broadinstitute.github.io/picard/picard-metric-definitions.html#CollectWgsMetrics.WgsMetrics)
 
-<% sample.cram.picard_collect_wgs_metrics_collection.picard_collect_wgs_metrics.each do |e| -%>
+<% @cram.picard_collect_wgs_metrics_collection.picard_collect_wgs_metrics.each do |e| -%>
 #### <%= e.chr_region.desc %>
 
 <%= e.path_table.markdown_text %>
@@ -51,6 +51,6 @@
 
 ### picard CollectBaseDistributionByCycle
 
-<% if sample.cram.picard_collect_base_distribution_by_cycle -%>
-![](<%= sample.cram.picard_collect_base_distribution_by_cycle.chart_png_path %>)
+<% if @cram.picard_collect_base_distribution_by_cycle -%>
+![](<%= @cram.picard_collect_base_distribution_by_cycle.chart_png_path %>)
 <% end -%>

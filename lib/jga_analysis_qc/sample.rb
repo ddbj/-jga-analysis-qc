@@ -10,20 +10,13 @@ require_relative 'report/render'
 
 module JgaAnalysisQC
   class Sample
-    HAPLOTYPECALLER_REGIONS = [
-      ChrRegion.new('autosome-PAR',       'autosome-PAR'),
-      ChrRegion.new('chrX-nonPAR-male',   'chrX-nonPAR (male)'),
-      ChrRegion.new('chrX-nonPAR-female', 'chrX-nonPAR (female)'),
-      ChrRegion.new('chrY-nonPAR',        'chrY-nonPAR')
-    ].freeze
-    WGS_METRICS_REGIONS = [
-      WGS_METRICS_AUTOSOME_REGION,
-      WGS_METRICS_CHR_X_REGION,
-      WGS_METRICS_CHR_Y_REGION
-    ].freeze
+    TEMPLATE_PREFIX = 'report'
 
     # @return [String] sample name
     attr_reader :name
+
+    # @return [dir]
+    attr_reader :dir
 
     # @return [Time, nil] workflow end time
     attr_reader :end_time
@@ -35,11 +28,13 @@ module JgaAnalysisQC
     attr_reader :cram
 
     # @param name           [String]
+    # @param dir            [Pathname]
     # @param end_time       [Time, nil]
     # @param vcf_collection [VcfCollection]
     # @param cram           [Cram, nil]
     def initialize(name, end_time = nil, vcf_collection = nil, cram = nil)
       @name = name
+      @dir = dir
       @end_time = end_time
       @vcf_collection = vcf_collection
       @cram = cram
@@ -53,7 +48,16 @@ module JgaAnalysisQC
         sample_dir = result_dir / sample_name
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
-        Sample.new(sample_name, nil, vcf_collection, cram)
+        Sample.new(sample_name, sample_dir, nil, vcf_collection, cram)
+      end
+
+      def render
+        Render.run(
+          TEMPLATE_PREFIX,
+          @dir,
+          binding,
+          toc_nesting_level: SAMPLE_TOC_NESTING_LEVEL
+        )
       end
 
       private

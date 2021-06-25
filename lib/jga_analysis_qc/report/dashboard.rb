@@ -23,6 +23,7 @@ module JgaAnalysisQC
       # @param result_dir [Pathname]
       # @param samples    [Array<Sample>]
       def initialize(result_dir, samples)
+        @result_dir = result_dir
         @samples = samples.sort_by(&:end_time).reverse
         @sample_col = C3js::Column.new(:sample_name, 'sample name')
         @default_chart_params = {
@@ -31,22 +32,19 @@ module JgaAnalysisQC
         }
       end
 
-      # @param result_dir [String]
-      # @return           [Pathname] HTML path
-      def render(result_dir)
-        result_dir = Pathname.new(result_dir)
-        FileUtils.mkpath result_dir unless File.exist?(result_dir)
+      # @return [Pathname] HTML path
+      def render
         [
           D3_JS_PATH,
           C3_JS_PATH,
           C3_CSS_PATH,
           GITHUB_MARKDOWN_CSS_PATH
         ].each do |src_path|
-          Render.copy_file(src_path, result_dir)
+          Render.copy_file(src_path, @result_dir)
         end
         Render.run(
           TEMPLATE_PREFIX,
-          result_dir,
+          @result_dir,
           binding,
           toc_nesting_level: DASHBOARD_TOC_NESTING_LEVEL
         )

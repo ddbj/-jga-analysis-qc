@@ -23,16 +23,15 @@ module JgaAnalysisQC
       # @param result_dir           [Pathname]
       # @param samples              [Array<Sample>]
       def initialize(result_dir, samples)
-        @results_dir = results_dir
+        @result_dir = result_dir
         @samples = samples.sort_by(&:end_time).reverse
-        @num_samples_per_page = num_samples_per_page
         max_pages = (MAX_SAMPLES.to_f / NUM_SAMPLES_PER_PAGE).ceil
         @num_digits = max_pages.digits.length
       end
 
       # @return [Array<Pathname>] HTML paths
       def render
-        slices = @samples.each_slice(@num_samples_per_page).to_a
+        slices = @samples.each_slice(NUM_SAMPLES_PER_PAGE).to_a
         slices.map.with_index(1) do |slice, page_num|
           paging = Paging.new(page_num, slices.length, @num_digits)
           table = sample_slice_to_table(slice)

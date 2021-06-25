@@ -32,12 +32,21 @@ module JgaAnalysisQC
     # @param end_time       [Time, nil]
     # @param vcf_collection [VcfCollection]
     # @param cram           [Cram, nil]
-    def initialize(name, end_time = nil, vcf_collection = nil, cram = nil)
+    def initialize(name, dir, end_time = nil, vcf_collection = nil, cram = nil)
       @name = name
       @dir = dir
       @end_time = end_time
       @vcf_collection = vcf_collection
       @cram = cram
+    end
+
+    def render
+      Report::Render.run(
+        TEMPLATE_PREFIX,
+        @dir,
+        binding,
+        toc_nesting_level: Report::SAMPLE_TOC_NESTING_LEVEL
+      )
     end
 
     class << self
@@ -49,15 +58,6 @@ module JgaAnalysisQC
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
         Sample.new(sample_name, sample_dir, nil, vcf_collection, cram)
-      end
-
-      def render
-        Render.run(
-          TEMPLATE_PREFIX,
-          @dir,
-          binding,
-          toc_nesting_level: SAMPLE_TOC_NESTING_LEVEL
-        )
       end
 
       private

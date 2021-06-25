@@ -6,6 +6,8 @@ require 'pathname'
 require_relative 'chr_region'
 require_relative 'sample'
 require_relative 'report/render'
+require_relative 'report/progress'
+require_relative 'report/dashboard'
 
 module JgaAnalysisQC
   module Report

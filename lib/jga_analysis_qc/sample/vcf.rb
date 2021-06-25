@@ -5,7 +5,7 @@ require 'fileutils'
 require_relative '../chr_region'
 require_relative 'vcf/bcftools_stats'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Vcf
       # @return [Pathname]g

@@ -18,17 +18,6 @@ require_relative 'report/render'
 
 module JgaAnalysisQC
   module Report
-    HAPLOTYPECALLER_REGIONS = [
-      ChrRegion.new('autosome-PAR',       'autosome-PAR'),
-      ChrRegion.new('chrX-nonPAR-male',   'chrX-nonPAR (male)'),
-      ChrRegion.new('chrX-nonPAR-female', 'chrX-nonPAR (female)'),
-      ChrRegion.new('chrY-nonPAR',        'chrY-nonPAR')
-    ].freeze
-    WGS_METRICS_REGIONS = [
-      WGS_METRICS_AUTOSOME_REGION,
-      WGS_METRICS_CHR_X_REGION,
-      WGS_METRICS_CHR_Y_REGION
-    ].freeze
     TEMPLATE_NAME = 'report'
 
     class << self
@@ -55,7 +44,7 @@ module JgaAnalysisQC
       # @param sample_name [String]
       # @param sample      [Sample]
       # @return            [Pathname] HTML path
-      def render(sample_dir, sample_name, sample)
+      def render(result_dir, sample_name, sample)
         sample_dir = result_dir / sample_name
         Render.copy_file(GITHUB_MARKDOWN_CSS_PATH, result_dir)
         Render.run(

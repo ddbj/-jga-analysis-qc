@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require 'csv'
 
 require_relative '../../report/table'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Cram
       class SamtoolsIdxstats
+        TARGET_CHROMOSOMES = ((1..22).to_a + %w[X Y]).freeze
         TABLE_COLUMNS = [
           ['chr. region', :name, :string],
           ['# of mapped reads',   :num_mapped,   :integer],
@@ -47,12 +49,12 @@ module VCReport
           @chromosomes = chromosomes
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def path_table
-          Table.file_table(@path, 'metrics file')
+          Report::Table.file_table(@path, 'metrics file')
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def num_reads_table
           header, messages, type = TABLE_COLUMNS.transpose
           rows = @chromosomes.map do |chromosome|
@@ -60,7 +62,7 @@ module VCReport
               chromosome.send(message)
             end
           end
-          Table.new(header, rows, type)
+          Report::Table.new(header, rows, type)
         end
 
         class << self

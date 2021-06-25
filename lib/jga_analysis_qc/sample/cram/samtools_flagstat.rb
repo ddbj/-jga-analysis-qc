@@ -4,7 +4,7 @@ require 'pathname'
 
 require_relative '../../report/table'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Cram
       class SamtoolsFlagstat
@@ -54,12 +54,12 @@ module VCReport
           params.each { |k, v| instance_variable_set("@#{k}", v) }
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def path_table
-          Table.file_table(@path, 'metrics file')
+          Report::Table.file_table(@path, 'metrics file')
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def num_reads_table
           header = ['description', '# of passed reads', '# of failed reads']
           rows = FIELDS.map do |attr, desc|
@@ -67,7 +67,7 @@ module VCReport
             [desc, num_reads.passed, num_reads.failed]
           end
           type = %i[string integer integer]
-          Table.new(header, rows, type)
+          Report::Table.new(header, rows, type)
         end
 
         class << self
@@ -92,6 +92,16 @@ module VCReport
               end
             end
             SamtoolsFlagstat.new(samtools_flagstat_path, **params)
+          end
+
+          # @param line     [String]
+          # @param trailing [String]
+          # @return         [NumReads, nil]
+          def extract_pass_and_fail(line, trailing)
+            regexp = /^(\d+) \+ (\d+) #{Regexp.escape(trailing)}(\s|$)/
+            return nil unless line =~ regexp
+
+            NumReads.new($1.to_i, $2.to_i)
           end
         end
       end

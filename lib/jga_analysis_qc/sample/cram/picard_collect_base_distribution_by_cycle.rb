@@ -2,7 +2,7 @@
 
 require 'pathname'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Cram
       class PicardCollectBaseDistributionByCycle

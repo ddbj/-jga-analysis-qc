@@ -5,7 +5,7 @@ require 'pathname'
 require_relative '../../chr_region'
 require_relative '../../report/table'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Cram
       class PicardCollectWgsMetrics
@@ -92,30 +92,30 @@ module VCReport
           @histogram = histogram
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def path_table
-          Table.file_table(@path, 'metrics file')
+          Report::Table.file_table(@path, 'metrics file')
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def territory_table
           header = ['genome territory (bp)']
           type = [:integer]
           rows = [[@territory]]
-          Table.new(header, rows, type)
+          Report::Table.new(header, rows, type)
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def coverage_stats_table
           desc = %w[mean median SD MAD]
           coverage = desc.map { |k| @coverage_stats.send(k.downcase) }
           header = %w[statistic coverage]
           rows = [desc, coverage].transpose
           type = %i[string float]
-          Table.new(header, rows, type)
+          Report::Table.new(header, rows, type)
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def percent_excluded_table
           desc = %w[mapQ dupe unpaired baseQ overlap capped total]
           excluded = desc.map do |k|
@@ -123,24 +123,24 @@ module VCReport
           end
           header = ['filter type', 'excluded (%)']
           rows = [desc, excluded].transpose
-          type = [:string, Table::FloatFormatter.new('.4')]
-          Table.new(header, rows, type)
+          type = [:string, Report::Table::FloatFormatter.new('.4')]
+          Report::Table.new(header, rows, type)
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def percent_coverage_table
           header = ['coverage', 'fraction (%)']
           rows = @percent_coverage.transform_values { |percent| percent * 100 }
-          type = [:integer, Table::FloatFormatter.new('.4')]
-          Table.new(header, rows, type)
+          type = [:integer, Report::Table::FloatFormatter.new('.4')]
+          Report::Table.new(header, rows, type)
         end
 
-        # @return [Table]
+        # @return [Report::Table]
         def het_snp_table
           header = ['HET SNP sensitivity', 'HET SNP sensitivity Q']
           type = %i[float integer]
           rows = [[@het_snp.sensitivity, @het_snp.q]]
-          Table.new(header, rows, type)
+          Report::Table.new(header, rows, type)
         end
 
         class << self
@@ -171,6 +171,23 @@ module VCReport
           end
 
           private
+
+          class Section
+            # @return [String, nil]
+            attr_reader :title
+
+            # @return [String]
+            attr_reader :java_type
+
+            # @return [String]
+            attr_reader :content
+
+            def initialize(title, java_type, content)
+              @title = title
+              @java_type = java_type
+              @content = content
+            end
+          end
 
           # @param lines [Array<String>] lines from picard-CollectWgsMetrics output
           # @param sym   [Symbol]

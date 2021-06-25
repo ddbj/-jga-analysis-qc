@@ -40,9 +40,9 @@ module JgaAnalysisQC
         @picard_collect_base_distribution_by_cycle = picard_collect_base_distribution_by_cycle
       end
 
-      # @return [Table]
+      # @return [Report::Table]
       def path_table
-        Table.file_table(@cram_path, 'input file')
+        Report::Table.file_table(@cram_path, 'input file')
       end
     end
   end

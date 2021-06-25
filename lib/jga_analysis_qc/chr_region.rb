@@ -8,13 +8,13 @@ module JgaAnalysisQC
     attr_reader :id
 
     # @return [String]
-    attr_reader :label
+    attr_reader :desc
 
-    # @param id    [String, Symbol]
-    # @param label [String]
-    def initialize(id, label = nil)
+    # @param id   [String, Symbol]
+    # @param desc [String]
+    def initialize(id, desc = nil)
       @id = id.to_sym
-      @label = label || @id.to_s
+      @desc = desc || @id.to_s
     end
   end
 end

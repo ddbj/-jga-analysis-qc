@@ -4,7 +4,7 @@ require 'pathname'
 require_relative '../../report/table'
 require_relative 'picard_collect_wgs_metrics'
 
-module VCReport
+module JgaAnalysisQC
   class Sample
     class Cram
       class PicardCollectWgsMetricsCollection

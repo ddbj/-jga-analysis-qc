@@ -63,13 +63,13 @@ module JgaAnalysisQC
         # @return [CoverageStats]
         attr_reader :coverage_stats
 
-        # @return [Hash{Integer => Float}] coverage -> percent
+        # @return [Hash{Integer => Float }] coverage -> percent
         attr_reader :percent_coverage
 
         # @return [HetSnp]
         attr_reader :het_snp
 
-        # @return [Hash{Integer => Integer] coverage -> count
+        # @return [Hash{ Integer => Integer }] coverage -> count
         attr_reader :histograma
 
         def initialize(path,

@@ -138,7 +138,7 @@ module JgaAnalysisQC
                  'w',
                  col_sep: "\t") do |csv|
           csv << [tsv_header]
-          autosome_PAR_mean_coverages_tsv_path.each do |cov|
+          autosome_PAR_mean_coverages.each do |cov|
             csv << [cov]
           end
         end

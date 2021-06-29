@@ -163,7 +163,7 @@ module JgaAnalysisQC
       def r_submit(cmd, verbose: false)
         ret = nil
         Open3.popen3('R --slave --vanilla') do |i, o, e, w|
-          i.puts stdin if stdin
+          i.puts cmd if cmd
           i.close
           o.each { |line| puts        line; STDOUT.flush } if verbose
           e.each { |line| STDERR.puts line; STDERR.flush } if verbose

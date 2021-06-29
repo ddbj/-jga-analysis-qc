@@ -128,7 +128,7 @@ module JgaAnalysisQC
                 .picard_collect_wgs_metrics_collection
                 .picard_collect_wgs_metrics
                 .find do |wgs_metrics|
-            wgs_metrics.chr_region.id == 'autosome-PAR'
+            wgs_metrics.chr_region.id == :'autosome-PAR'
           end.coverage_stats.mean
         end
         autosome_PAR_mean_coverages_tsv_path =

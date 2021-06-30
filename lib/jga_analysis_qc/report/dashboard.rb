@@ -143,30 +143,34 @@ module JgaAnalysisQC
           end
         end
         plot_path = autosome_PAR_mean_coverages_tsv_path.sub_ext('.hist.png')
-        r_submit <<~R_SCRIPT
+        r_script = <<~R_SCRIPT
           library(ggplot2)
           library(readr)
 
           d <- as.data.frame(read_tsv("#{autosome_PAR_mean_coverages_tsv_path}"))
-          g <- ggplot(d, aes(x = #{tsv_header})
+          g <- ggplot(d, aes(x = #{tsv_header}))
           g <- g + geom_histogram(position="identity", alpha=0.8, color="darkgreen")
           g <- g + theme_classic()
           g <- g + theme(text=element_text(size=20))
+          g <- g + xlab("autosome-PAR mean coverage")
           g <- g + ylab("Number of subjects")
           ggsave(file="#{plot_path}", plot=g, height=5, width=8)
         R_SCRIPT
+        r_submit(r_script, plot_path.sub_ext('.log'))
         plot_path
       end
 
-      # @param cmd     [String]
-      # @param verbose [Boolean]
-      def r_submit(cmd, verbose: false)
+      # @param cmd      [String]
+      # @param log_path [Pathname]
+      def r_submit(cmd, log_path)
         ret = nil
-        Open3.popen3('R --slave --vanilla') do |i, o, e, w|
-          i.puts cmd if cmd
-          i.close
-          o.each { |line| puts        line; STDOUT.flush } if verbose
-          e.each { |line| STDERR.puts line; STDERR.flush } if verbose
+        File.open(log_path, 'w') do |f|
+          Open3.popen3('R --slave --vanilla') do |i, o, e|
+            i.puts cmd if cmd
+            i.close
+            o.each { |line| f.puts line }
+            e.each { |line| f.puts line }
+          end
         end
       end
     end

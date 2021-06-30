@@ -38,7 +38,7 @@ module JgaAnalysisQC
         [D3_JS_PATH, C3_JS_PATH, C3_CSS_PATH].each do |src_path|
           Render.copy_file(src_path, @result_dir)
         end
-        table_path = create_mean_coverage_table
+        table_path = create_mean_coverage_table(@result_dir)
         autosome_PAR_mean_coverage_plot_path =
           plot_autosome_PAR_mean_coverage(@result_dir, table_path)
         chrXY_nonPAR_normalized_mean_coverage_plot_path =
@@ -143,7 +143,7 @@ module JgaAnalysisQC
             end
             tsv << [
               mean_coverage[:'autosome-PAR'],
-              mean_coverage[:'chrX-nonPAR'] / mean_coverage[:'autosome-PAR']
+              mean_coverage[:'chrX-nonPAR'] / mean_coverage[:'autosome-PAR'],
               mean_coverage[:'chrY-nonPAR'] / mean_coverage[:'autosome-PAR']
             ]
           end
@@ -182,7 +182,7 @@ module JgaAnalysisQC
           library(ggplot2)
           library(readr)
 
-          d <- as.data.frame(read_tsv("#{table_path}")
+          d <- as.data.frame(read_tsv("#{table_path}"))
           g <- ggplot(d, aes(x = chrX_nonPAR_normalized_mean_coverage, y = chrY_nonPAR_normalized_mean_coverage))
           g <- g + geom_point(size = 2, color="darkgreen")
           g <- g + theme_classic()
@@ -191,6 +191,7 @@ module JgaAnalysisQC
           g <- g + ylab("chrY-nonPAR normalized mean coverage")
           ggsave(file="#{plot_path}", plot=g, height=8, width=8)
         R_SCRIPT
+        r_submit(r_script, plot_path.sub_ext('.log'))
         plot_path
       end
 

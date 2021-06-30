@@ -5,6 +5,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'pathname'
 require 'fileutils'
 require 'open3'
+require 'thor'
 
 require_relative '../settings'
 require_relative '../chr_region'
@@ -15,6 +16,8 @@ require_relative 'c3js'
 module JgaAnalysisQC
   module Report
     class Dashboard
+      include Thor::Shell
+
       TEMPLATE_PREFIX = 'dashboard'
       COVERAGE_STATS_TYPES = {
         mean: 'mean', sd: 'SD', median: 'median', mad: 'MAD'
@@ -134,12 +137,24 @@ module JgaAnalysisQC
             chrY_nonPAR_normalized_mean_coverage
           ]
           @samples.each do |sample|
+            unless sample.cram
+              say_status 'error', "cannot load cram: #{sample.name}", :red
+              exit 1
+            end
             mean_coverage = sample
-              .cram
-              .picard_collect_wgs_metrics_collection
-              .picard_collect_wgs_metrics
-              .map.to_h do |wgs_metrics|
+                              .cram
+                              .picard_collect_wgs_metrics_collection
+                              .picard_collect_wgs_metrics
+                              .map.to_h do |wgs_metrics|
               [wgs_metrics.chr_region.id, wgs_metrics.coverage_stats.mean]
+            end
+            %i[autosome-PAR chrX-nonPAR chrY-nonPAR].each do |region_id|
+              next if mean_coverage.key?(region_id)
+
+              say_status 'error',
+                         "cannot find mean coverage: #{sample.name}, #{region_id}",
+                         :red
+              exit 1
             end
             tsv << [
               mean_coverage[:'autosome-PAR'],

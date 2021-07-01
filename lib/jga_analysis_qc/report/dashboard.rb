@@ -41,10 +41,11 @@ module JgaAnalysisQC
         [D3_JS_PATH, C3_JS_PATH, C3_CSS_PATH].each do |src_path|
           Render.copy_file(src_path, @result_dir)
         end
-        table_path = create_mean_coverage_table(@result_dir)
-        autosome_PAR_mean_coverage_plot_path =
-          plot_autosome_PAR_mean_coverage(@result_dir, table_path)
-        chrXY_nonPAR_normalized_mean_coverage_plot_path =
+        table_path = @result_dir / MEAN_COVERAGE_TABLE_FILENAME
+        create_mean_coverage_table(table_path)
+        autosome_mean_coverage_plot_path =
+          plot_autosome_mean_coverage(@result_dir, table_path)
+        chrXY_normalized_mean_coverage_plot_path =
           plot_chrXY_normalized_mean_coverage(@result_dir, table_path)
         Render.run(
           TEMPLATE_PREFIX,
@@ -126,15 +127,14 @@ module JgaAnalysisQC
         end
       end
 
-      # @param result_dir [Pathname]
-      # @return           [Pathname]
-      def create_mean_coverage_table(result_dir)
-        table_path = result_dir / 'mean_coverage.tsv'
+      # @param table_path [Pathname]
+      def create_mean_coverage_table(table_path)
         CSV.open(table_path, 'w', col_sep: "\t") do |tsv|
-          tsv << %w[
-            autosome_PAR_mean_coverage
-            chrX_nonPAR_normalized_mean_coverage
-            chrY_nonPAR_normalized_mean_coverage
+          tsv << [
+            'id',
+            AUTOSOME_PAR_MEAN_COVERAGE_KEY,
+            CHR_X_NON_PAR_NORMALIZED_MEAN_COVERAGE_KEY,
+            CHR_Y_NON_PAR_NORMALIZED_MEAN_COVERAGE_KEY,
           ]
           @samples.each do |sample|
             unless sample.cram
@@ -148,7 +148,7 @@ module JgaAnalysisQC
                               .map.to_h do |wgs_metrics|
               [wgs_metrics.chr_region.id, wgs_metrics.coverage_stats.mean]
             end
-            %i[autosome-PAR chrX-nonPAR chrY-nonPAR].each do |region_id|
+            WGS_METRICS_REGIONS.map(&:id).each do |region_id|
               next if mean_coverage.key?(region_id)
 
               say_status 'error',
@@ -156,31 +156,31 @@ module JgaAnalysisQC
                          :red
               exit 1
             end
+            autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION.id]
             tsv << [
-              mean_coverage[:'autosome-PAR'],
-              mean_coverage[:'chrX-nonPAR'] / mean_coverage[:'autosome-PAR'],
-              mean_coverage[:'chrY-nonPAR'] / mean_coverage[:'autosome-PAR']
+              autosome_mean_coverage,
+              mean_coverage[WGS_METRICS_CHR_X_REGION.id] / autosome_mean_coverage
+              mean_coverage[WGS_METRICS_CHR_Y_REGION.id] / autosome_mean_coverage
             ]
           end
         end
-        table_path
       end
 
       # @param result_dir [Pathname]
       # @param table_path [Pathname]
       # @return           [Pathname]
-      def plot_autosome_PAR_mean_coverage(result_dir, table_path)
-        plot_path = result_dir / 'autosome-PAR_mean_coverage.hist.png'
+      def plot_autosome_mean_coverage(result_dir, table_path)
+        plot_path = result_dir / 'autosome_mean_coverage.hist.png'
         r_script = <<~R_SCRIPT
           library(ggplot2)
           library(readr)
 
           d <- as.data.frame(read_tsv("#{table_path}"))
-          g <- ggplot(d, aes(x = autosome_PAR_mean_coverage))
+          g <- ggplot(d, aes(x = #{AUTOSOME_MEAN_COVERAGE_KEY}))
           g <- g + geom_histogram(position="identity", alpha=0.8, color="darkgreen")
           g <- g + theme_classic()
           g <- g + theme(text=element_text(size=20))
-          g <- g + xlab("autosome-PAR mean coverage")
+          g <- g + xlab("#{WGS_METRICS_AUTOSOME_REGION.id} mean coverage")
           g <- g + ylab("Number of subjects")
           ggsave(file="#{plot_path}", plot=g, height=5, width=8)
         R_SCRIPT
@@ -192,18 +192,18 @@ module JgaAnalysisQC
       # @param table_path [Pathname]
       # @return           [Pathname]
       def plot_chrXY_normalized_mean_coverage(result_dir, table_path)
-        plot_path = result_dir / 'chrXY-nonPAR_normalized_mean_coverage.scatter.png'
+        plot_path = result_dir / 'chrXY_normalized_mean_coverage.scatter.png'
         r_script = <<~R_SCRIPT
           library(ggplot2)
           library(readr)
 
           d <- as.data.frame(read_tsv("#{table_path}"))
-          g <- ggplot(d, aes(x = chrX_nonPAR_normalized_mean_coverage, y = chrY_nonPAR_normalized_mean_coverage))
+          g <- ggplot(d, aes(x = #{CHR_X_NORMALIZED_MEAN_COVERAGE_KEY}, y = #{CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY}))
           g <- g + geom_point(size = 2, color="darkgreen")
           g <- g + theme_classic()
           g <- g + theme(text=element_text(size=20))
-          g <- g + xlab("chrX-nonPAR normalized mean coverage")
-          g <- g + ylab("chrY-nonPAR normalized mean coverage")
+          g <- g + xlab("#{WGS_METRICS_CHR_X_REGION.id} normalized mean coverage")
+          g <- g + ylab("#{WGS_METRICS_CHR_Y_REGION.id} normalized mean coverage")
           ggsave(file="#{plot_path}", plot=g, height=8, width=8)
         R_SCRIPT
         r_submit(r_script, plot_path.sub_ext('.log'))

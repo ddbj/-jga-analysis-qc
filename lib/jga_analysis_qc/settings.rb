@@ -19,6 +19,11 @@ module JgaAnalysisQC
     ChrRegion.new('chrY-nonPAR',        'chrY-nonPAR')
   ].freeze
 
+  MEAN_COVERAGE_TABLE_FILENAME = 'mean_coverage'
+  AUTOSOME_MEAN_COVERAGE_KEY = 'autosome_PAR_mean_coverage'
+  CHR_X_NORMALIZED_MEAN_COVERAGE_KEY = 'chrX_nonPAR_normalized_mean_coverage'
+  CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY = 'chrY_nonPAR_normalized_mean_coverage'
+
   module Report
     LIB_DIR = File.expand_path("#{__dir__}/..")
     D3_JS_PATH = "#{LIB_DIR}/d3/d3.v5.js"

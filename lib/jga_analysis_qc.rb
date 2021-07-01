@@ -4,6 +4,7 @@ require 'thor'
 
 require_relative 'jga_analysis_qc/version'
 require_relative 'jga_analysis_qc/report'
+require_relative 'jga_analysis_qc/filter'
 
 module JgaAnalysisQC
   module CLI
@@ -15,6 +16,11 @@ module JgaAnalysisQC
       desc 'report [DIR] [SAMPLE LIST]', 'Produce a report on per-sample workflow results'
       def report(result_dir, sample_list_path)
         Report.run(result_dir, sample_list_path)
+      end
+
+      desc 'filter [DIR] [PARAMETER]', 'Performs QC according to the given parameters'
+      def filter(result_dir, param_path)
+        Filter.run(result_dir, param_path)
       end
     end
   end

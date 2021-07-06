@@ -19,9 +19,7 @@ module JgaAnalysisQC
       include Thor::Shell
 
       TEMPLATE_PREFIX = 'dashboard'
-      COVERAGE_STATS_TYPES = {
-        mean: 'mean', sd: 'SD', median: 'median', mad: 'MAD'
-      }.freeze
+      COVERAGE_STATS_TYPES = { mean: 'mean' }.freeze
       X_AXIS_LABEL_HEIGHT = 100
 
       # @param result_dir [Pathname]

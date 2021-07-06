@@ -3,9 +3,10 @@
 require_relative 'chr_region'
 
 module JgaAnalysisQC
-  WGS_METRICS_AUTOSOME_REGION = ChrRegion.new('autosome-PAR')
-  WGS_METRICS_CHR_X_REGION = ChrRegion.new('chrX-nonPAR')
-  WGS_METRICS_CHR_Y_REGION = ChrRegion.new('chrY-nonPAR')
+  WGS_METRICS_AUTOSOME_REGION = ChrRegion.new('autosome_PAR_ploidy_2', 'autosome_PAR')
+  # 'chrX_nonPAR_ploidy_1' and 'chrX_nonPAR_ploidy_2' produce the same WGS metrics
+  WGS_METRICS_CHR_X_REGION    = ChrRegion.new('chrX_nonPAR_ploidy_1',  'chrX_nonPAR')
+  WGS_METRICS_CHR_Y_REGION    = ChrRegion.new('chrY_nonPAR_ploidy_1',  'chrY_nonPAR')
   WGS_METRICS_REGIONS = [
     WGS_METRICS_AUTOSOME_REGION,
     WGS_METRICS_CHR_X_REGION,
@@ -13,11 +14,17 @@ module JgaAnalysisQC
   ].freeze
 
   HAPLOTYPECALLER_REGIONS = [
-    ChrRegion.new('autosome-PAR',       'autosome-PAR'),
-    ChrRegion.new('chrX-nonPAR-male',   'chrX-nonPAR (male)'),
-    ChrRegion.new('chrX-nonPAR-female', 'chrX-nonPAR (female)'),
-    ChrRegion.new('chrY-nonPAR',        'chrY-nonPAR')
+    ChrRegion.new('autosome_PAR_ploidy_2', 'autosome_PAR'),
+    ChrRegion.new('chrX_nonPAR_ploidy_1',  'chrX_nonPAR (ploidy = 1)'),
+    ChrRegion.new('chrX_nonPAR_ploidy_2',  'chrX_nonPAR (ploidy = 2)'),
+    ChrRegion.new('chrY_nonPAR_ploidy_1',  'chrY_nonPAR')
   ].freeze
+
+  # coverage table file specification
+  MEAN_COVERAGE_TABLE_FILENAME = 'mean_coverage'
+  AUTOSOME_MEAN_COVERAGE_KEY = 'autosome_PAR_mean_coverage'
+  CHR_X_NORMALIZED_MEAN_COVERAGE_KEY = 'chrX_nonPAR_normalized_mean_coverage'
+  CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY = 'chrY_nonPAR_normalized_mean_coverage'
 
   module Report
     LIB_DIR = File.expand_path("#{__dir__}/..")

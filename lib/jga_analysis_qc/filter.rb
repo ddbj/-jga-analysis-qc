@@ -12,6 +12,8 @@ module JgaAnalysisQC
   module Filter
     include Thor::Shell
 
+    FILTER_TABLE_FILENAME = 'qc.tsv'
+
     %w[min max].each do |extremum|
       const_set(
         "AUTOSOME_MEAN_COVERAGE_#{extremum.upcase}_KEY",
@@ -37,9 +39,9 @@ module JgaAnalysisQC
         result_dir = Pathname.new(result_dir)
         mean_coverage = load_mean_coverage(result_dir)
         param = YAML.load_file(param_path)
-        qc_path = result_dir / 'qc.tsv'
+        qc_path = result_dir / FILTER_TABLE_FILENAME
         CSV.open(qc_path, 'w', col_sep: "\t") do |tsv|
-          tsv << %w[id coverage sex]
+          tsv << %w[sample_id coverage_filter estimated_sex]
           table.each do |row|
             tsv << [
               row[:id],

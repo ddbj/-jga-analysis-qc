@@ -76,7 +76,7 @@ module JgaAnalysisQC
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|
           vcfs = slice.map { |e| find_vcf_of_region(e, chr_region)}
-          cols << ["gVCF #{chr_region.desc}", vcfs.map { |e| e&.path }]
+          cols << ["gVCF #{chr_region.desc}", vcfs.map { |e| e&.vcf_path }]
           cols << ["bcftools stats #{chr_region.desc}",
                    vcfs.map { |e| e&.bcftools_stats&.path}]
         end

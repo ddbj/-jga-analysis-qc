@@ -129,10 +129,10 @@ module JgaAnalysisQC
       def create_mean_coverage_table(table_path)
         CSV.open(table_path, 'w', col_sep: "\t") do |tsv|
           tsv << [
-            'id',
-            AUTOSOME_PAR_MEAN_COVERAGE_KEY,
-            CHR_X_NON_PAR_NORMALIZED_MEAN_COVERAGE_KEY,
-            CHR_Y_NON_PAR_NORMALIZED_MEAN_COVERAGE_KEY,
+            'sample_id',
+            AUTOSOME_MEAN_COVERAGE_KEY,
+            CHR_X_NORMALIZED_MEAN_COVERAGE_KEY,
+            CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY,
           ]
           @samples.each do |sample|
             unless sample.cram
@@ -156,12 +156,14 @@ module JgaAnalysisQC
             end
             autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION.id]
             tsv << [
+              sample.name,
               autosome_mean_coverage,
-              mean_coverage[WGS_METRICS_CHR_X_REGION.id] / autosome_mean_coverage
+              mean_coverage[WGS_METRICS_CHR_X_REGION.id] / autosome_mean_coverage,
               mean_coverage[WGS_METRICS_CHR_Y_REGION.id] / autosome_mean_coverage
             ]
           end
         end
+        say_status 'create', table_path, :green
       end
 
       # @param result_dir [Pathname]

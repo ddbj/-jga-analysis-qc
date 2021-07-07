@@ -10,7 +10,7 @@ require_relative 'chr_region'
 
 module JgaAnalysisQC
   module Filter
-    include Thor::Shell
+    extend Thor::Shell
 
     FILTER_TABLE_FILENAME = 'qc.tsv'
 
@@ -27,14 +27,15 @@ module JgaAnalysisQC
       # @param param_path [String]
       def run(result_dir, param_path)
         result_dir = Pathname.new(result_dir)
+        param_path = Pathname.new(param_path)
         mean_coverage = load_mean_coverage(result_dir)
         param = load_param(param_path)
         qc_path = result_dir / FILTER_TABLE_FILENAME
         CSV.open(qc_path, 'w', col_sep: "\t") do |tsv|
           tsv << %w[sample_id coverage_filter estimated_sex]
-          table.each do |row|
+          mean_coverage.each do |row|
             tsv << [
-              row[:id],
+              row['sample_id'],
               filter_by_coverage(row[AUTOSOME_MEAN_COVERAGE_KEY], param),
               estimate_sex(
                 row[CHR_X_NORMALIZED_MEAN_COVERAGE_KEY],
@@ -57,7 +58,7 @@ module JgaAnalysisQC
           say_status 'error', "cannot find #{table_path}", :red
           exit 1
         end
-        CSV.table(table_path, col_sep: "\t")
+        CSV.read(table_path, headers: true, converters: :numeric, col_sep: "\t")
       end
 
       # @param param_path [Pathname]

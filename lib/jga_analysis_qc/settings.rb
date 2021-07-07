@@ -21,7 +21,7 @@ module JgaAnalysisQC
   ].freeze
 
   # coverage table file specification
-  MEAN_COVERAGE_TABLE_FILENAME = 'mean_coverage'
+  MEAN_COVERAGE_TABLE_FILENAME = 'mean_coverage.tsv'
   AUTOSOME_MEAN_COVERAGE_KEY = 'autosome_PAR_mean_coverage'
   CHR_X_NORMALIZED_MEAN_COVERAGE_KEY = 'chrX_nonPAR_normalized_mean_coverage'
   CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY = 'chrY_nonPAR_normalized_mean_coverage'

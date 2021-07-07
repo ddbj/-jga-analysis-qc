@@ -8,7 +8,7 @@ require_relative 'vcf/bcftools_stats'
 module JgaAnalysisQC
   class Sample
     class Vcf
-      # @return [Pathname]g
+      # @return [Pathname]
       attr_reader :vcf_path
 
       # @return [ChrRegion]

@@ -70,7 +70,7 @@ module JgaAnalysisQC
         attr_reader :het_snp
 
         # @return [Hash{ Integer => Integer }] coverage -> count
-        attr_reader :histograma
+        attr_reader :histogram
 
         def initialize(path,
                        chr_region,

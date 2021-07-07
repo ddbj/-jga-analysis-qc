@@ -18,9 +18,6 @@ module JgaAnalysisQC
     # @return [dir]
     attr_reader :dir
 
-    # @return [Time, nil] workflow end time
-    attr_reader :end_time
-
     # @return [VcfCollection]
     attr_reader :vcf_collection
 
@@ -29,13 +26,11 @@ module JgaAnalysisQC
 
     # @param name           [String]
     # @param dir            [Pathname]
-    # @param end_time       [Time, nil]
     # @param vcf_collection [VcfCollection]
     # @param cram           [Cram, nil]
-    def initialize(name, dir, end_time = nil, vcf_collection = nil, cram = nil)
+    def initialize(name, dir, vcf_collection, cram = nil)
       @name = name
       @dir = dir
-      @end_time = end_time
       @vcf_collection = vcf_collection
       @cram = cram
     end
@@ -99,7 +94,7 @@ module JgaAnalysisQC
       # @param cram_basename [String]
       # @return              [Cram::PicardCollectWgsMetricsCollection]
       def read_picard_collect_wgs_metrics_collection(sample_dir, cram_basename)
-        picard_collect_wgs_metrics = WGS_METRICS_REGIONS.flat_map do |chr_region|
+        picard_collect_wgs_metrics = WGS_METRICS_REGIONS.filter_map do |chr_region|
           picard_collect_wgs_metrics_path =
             sample_dir / "#{cram_basename}.#{chr_region.id}.wgs_metrics"
           Cram::PicardCollectWgsMetrics.parse(picard_collect_wgs_metrics_path, chr_region)

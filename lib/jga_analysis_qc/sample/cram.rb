@@ -18,7 +18,7 @@ module JgaAnalysisQC
       # @return [PicardCollectWgsMetrics]
       attr_reader :picard_collect_wgs_metrics_collection
 
-      # @return [PicardCollectBaseDistributionByCycle]
+      # @return [PicardCollectBaseDistributionByCycle, nil]
       attr_reader :picard_collect_base_distribution_by_cycle
 
       # @param cram_path                                 [Pathname]

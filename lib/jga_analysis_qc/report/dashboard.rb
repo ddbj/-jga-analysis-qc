@@ -135,35 +135,35 @@ module JgaAnalysisQC
             CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY,
           ]
           @samples.each do |sample|
-            unless sample.cram
-              say_status 'error', "cannot load cram: #{sample.name}", :red
-              exit 1
-            end
             mean_coverage = sample
-                              .cram
-                              .picard_collect_wgs_metrics_collection
-                              .picard_collect_wgs_metrics
-                              .map.to_h do |wgs_metrics|
+                              &.cram
+                              &.picard_collect_wgs_metrics_collection
+                              &.picard_collect_wgs_metrics
+                              &.map&.to_h do |wgs_metrics|
               [wgs_metrics.chr_region.id, wgs_metrics.coverage_stats.mean]
             end
-            WGS_METRICS_REGIONS.map(&:id).each do |region_id|
-              next if mean_coverage.key?(region_id)
-
-              say_status 'error',
-                         "cannot find mean coverage: #{sample.name}, #{region_id}",
-                         :red
-              exit 1
+            autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION] if mean_coverage
+            if autosome_mean_coverage
+              chr_x_normalized_mean_coverage, chr_y_normalized_mean_coverage =
+                [WGS_METRICS_CHR_X_REGION, WGS_METRICS_CHR_Y_REGION].map do |region|
+                mean_coverage[region.id] / autosome_mean_coverage
+              end
             end
-            autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION.id]
             tsv << [
               sample.name,
-              autosome_mean_coverage,
-              mean_coverage[WGS_METRICS_CHR_X_REGION.id] / autosome_mean_coverage,
-              mean_coverage[WGS_METRICS_CHR_Y_REGION.id] / autosome_mean_coverage
+              fill_NA_if_nil(autosome_mean_coverage),
+              fill_NA_if_nil(chr_x_normalized_mean_coverage),
+              fill_NA_if_nil(chr_y_normalized_mean_coverage)
             ]
           end
         end
         say_status 'create', table_path, :green
+      end
+
+      # @param value [Float]
+      # @return      [Float, String]
+      def fill_NA_if_nil(value)
+        value.nil? ? 'NA' : value
       end
 
       # @param result_dir [Pathname]

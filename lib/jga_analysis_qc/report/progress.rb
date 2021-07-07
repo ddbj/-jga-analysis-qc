@@ -53,7 +53,7 @@ module JgaAnalysisQC
         end_times = collect_end_time(slice).transpose
         header_end_time = end_times.shift
         header += header_end_time
-        type += header_end_time.length.times('string')
+        type += header_end_time.length.times(:string)
         rows = html_rows.zip(end_times) { |*a| a.flatten }
         Table.new(header, rows, type)
       end

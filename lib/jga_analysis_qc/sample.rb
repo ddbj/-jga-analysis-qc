@@ -52,7 +52,7 @@ module JgaAnalysisQC
         sample_dir = result_dir / sample_name
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
-        Sample.new(sample_name, sample_dir, nil, vcf_collection, cram)
+        Sample.new(sample_name, sample_dir, vcf_collection, cram)
       end
 
       private

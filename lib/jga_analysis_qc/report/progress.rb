@@ -50,11 +50,11 @@ module JgaAnalysisQC
           sample_id = Render.markdown_link_text(sample.name, "#{sample.name}/report.html")
           [sample_id]
         end
-        end_times = collect_end_time(slice).transpose
+        end_times = collect_end_time(slice).map(&:flatten).transpose
         header_end_time = end_times.shift
         header += header_end_time
-        type += header_end_time.length.times(:string)
-        rows = html_rows.zip(end_times) { |*a| a.flatten }
+        type += Array.new(header_end_time.length, :string)
+        rows = link_rows.zip(end_times).map(&:flatten)
         Table.new(header, rows, type)
       end
 
@@ -64,15 +64,15 @@ module JgaAnalysisQC
       def collect_end_time(slice)
         cols = []
         cols << ['CRAM', slice.map { |e| e.cram&.cram_path }]
-        cols << ['idxstats', slice.map { |e| e.cram&.samtools_idxstats&.path }]
-        cols << ['flagstat', slice.map { |e| e.cram&.samtools_flagstat&.path }]
+        cols << ['samtools idxstats', slice.map { |e| e.cram&.samtools_idxstats&.path }]
+        cols << ['samtools flagstat', slice.map { |e| e.cram&.samtools_flagstat&.path }]
         cols += WGS_METRICS_REGIONS.map do |chr_region|
           ["WGS metrics #{chr_region.desc}",
             slice.map { |e| find_wgs_metrics_of_region(e, chr_region)&.path }]
         end
         cols << [
           'base distribution by cicle',
-          slice.map { |e| e.cram&.picard_collect_base_distribution_by_cycle&.path }
+          slice.map { |e| e.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path }
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|
           vcfs = slice.map { |e| find_vcf_of_region(e, chr_region)}
@@ -80,7 +80,9 @@ module JgaAnalysisQC
           cols << ["bcftools stats #{chr_region.desc}",
                    vcfs.map { |e| e&.bcftools_stats&.path}]
         end
-        cols.map { |desc, path| [desc, end_time_string_from_path] }
+        cols.map do |desc, paths|
+          [desc, paths.map { |path| end_time_string_from_path(path) }]
+        end
       end
 
       # @param sample     [Sample]

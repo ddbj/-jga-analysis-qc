@@ -26,7 +26,7 @@ module JgaAnalysisQC
       # @param samples    [Array<Sample>]
       def initialize(result_dir, samples)
         @result_dir = result_dir
-        @samples = samples.sort_by(&:end_time).reverse
+        @samples = samples
         @sample_col = C3js::Column.new(:sample_name, 'sample name')
         @default_chart_params = {
           x: @sample_col,

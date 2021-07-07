@@ -9,6 +9,9 @@ require_relative 'cram/picard_collect_base_distribution_by_cycle'
 module JgaAnalysisQC
   class Sample
     class Cram
+      # @return [Pathname]
+      attr_reader :cram_path
+
       # @return [SamtoolsIdxstats, nil]
       attr_reader :samtools_idxstats
 

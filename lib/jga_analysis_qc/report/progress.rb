@@ -31,7 +31,12 @@ module JgaAnalysisQC
 
       # @return [Array<Pathname>] HTML paths
       def render
-        slices = @samples.each_slice(NUM_SAMPLES_PER_PAGE).to_a
+        num_samples = @samples.length
+        sample_key_values = @samples.map { |sample| sample_key_value(sample) }
+        sample_key_values.sort_by! { |h| h['status'] } # "complete" accompanied by "incomplete""
+        num_complete_samples =
+          sample_key_values.select { |h| h['status'] == 'complete' }.length
+        slices = sample_key_values.each_slice(NUM_SAMPLES_PER_PAGE).to_a
         slices.map.with_index(1) do |slice, page_num|
           paging = Paging.new(page_num, slices.length, @num_digits)
           table = sample_slice_to_table(slice)
@@ -41,49 +46,45 @@ module JgaAnalysisQC
 
       private
 
-      # @param slice [Array<Sample>]
-      # @return      [Table]
-      def sample_slice_to_table(slice)
-        header = ['sample_id']
-        type = %i[string]
-        link_rows = slice.map do |sample|
-          sample_id = Render.markdown_link_text(sample.name, "#{sample.name}/report.html")
-          [sample_id]
-        end
-        end_times = slice.map { |sample| collect_end_time(sample) }
-        end_time_keys = end_times.first.keys
-        header += end_time_keys
-        type += Array.new(end_time_keys.length, :string)
-        rows = link_rows.zip(end_times).map do |link, end_time|
-          [link, end_time_keys.map { |k| end_time[k]}].flatten
+      # @param sample_kev_values [Array<Hash{ String => String }>]
+      # @return                  [Table]
+      def sample_slice_to_table(sample_key_values)
+        header = sample_key_values.first.keys
+        type = Array.new(header.length, :string)
+        rows = sample_key_values.map do |h|
+          header.map { |k| h[k] }
         end
         Table.new(header, rows, type)
       end
 
       # @param sample [Sample]
-      # @return       [Array<String>]
-      def collect_end_time(sample)
+      # @return       [Hash { String => String }]
+      def sample_key_value(sample)
         cols = []
         cols << ['CRAM', sample.cram&.cram_path]
         cols << ['samtools idxstats', sample.cram&.samtools_idxstats&.path]
         cols << ['samtools flagstat', sample.cram&.samtools_flagstat&.path]
         cols += WGS_METRICS_REGIONS.map do |chr_region|
           ["WGS metrics #{chr_region.desc}",
-            sample.find_wgs_metrics_of_region(e, chr_region)&.path]
+            find_wgs_metrics_of_region(sample, chr_region)&.path]
         end
         cols << [
           'base distribution by cicle',
           sample.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|
-          vcf = sample.find_vcf_of_region(e, chr_region)
+          vcf = find_vcf_of_region(sample, chr_region)
           cols << ["gVCF #{chr_region.desc}", vcf&.vcf_path]
           cols << ["bcftools stats #{chr_region.desc}", vcf&.bcftools_stats&.path]
         end
         status = cols.all? { |_, path| !path.nil? } ? 'complete' : 'incomplete'
-        status_col = ['status', status]
         cols.map! { |desc, path| [desc, end_time_string_from_path(path)] }
-        (status_col + cols).to_h
+        sample_id_col = [
+          'sample_id',
+          Render.markdown_link_text(sample.name, "#{sample.name}/report.html")
+        ]
+        status_col = ['status', status]
+        ([sample_id_col, status_col] + cols).to_h
       end
 
       # @param sample     [Sample]

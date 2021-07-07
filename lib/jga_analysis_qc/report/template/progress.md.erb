@@ -1,5 +1,7 @@
 # Progress
 
+complete: <%= num_complete_samples %> / <%= num_samples %>
+
 page: <%= paging.current_page %> / <%= paging.total_page %>
 
 <%= navigation_markdown_text(TEMPLATE_PREFIX, paging) %>

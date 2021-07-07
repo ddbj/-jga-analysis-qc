@@ -50,39 +50,40 @@ module JgaAnalysisQC
           sample_id = Render.markdown_link_text(sample.name, "#{sample.name}/report.html")
           [sample_id]
         end
-        end_times = collect_end_time(slice).map(&:flatten).transpose
-        header_end_time = end_times.shift
-        header += header_end_time
-        type += Array.new(header_end_time.length, :string)
-        rows = link_rows.zip(end_times).map(&:flatten)
+        end_times = slice.map { |sample| collect_end_time(sample) }
+        end_time_keys = end_times.first.keys
+        header += end_time_keys
+        type += Array.new(end_time_keys.length, :string)
+        rows = link_rows.zip(end_times).map do |link, end_time|
+          [link, end_time_keys.map { |k| end_time[k]}].flatten
+        end
         Table.new(header, rows, type)
       end
 
-      # @param slice [Array<Sample>]
-      # @return      [Array<Array>>]
-      #              array whose each element is [header string, array of end-time string]
-      def collect_end_time(slice)
+      # @param sample [Sample]
+      # @return       [Array<String>]
+      def collect_end_time(sample)
         cols = []
-        cols << ['CRAM', slice.map { |e| e.cram&.cram_path }]
-        cols << ['samtools idxstats', slice.map { |e| e.cram&.samtools_idxstats&.path }]
-        cols << ['samtools flagstat', slice.map { |e| e.cram&.samtools_flagstat&.path }]
+        cols << ['CRAM', sample.cram&.cram_path]
+        cols << ['samtools idxstats', sample.cram&.samtools_idxstats&.path]
+        cols << ['samtools flagstat', sample.cram&.samtools_flagstat&.path]
         cols += WGS_METRICS_REGIONS.map do |chr_region|
           ["WGS metrics #{chr_region.desc}",
-            slice.map { |e| find_wgs_metrics_of_region(e, chr_region)&.path }]
+            sample.find_wgs_metrics_of_region(e, chr_region)&.path]
         end
         cols << [
           'base distribution by cicle',
-          slice.map { |e| e.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path }
+          sample.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|
-          vcfs = slice.map { |e| find_vcf_of_region(e, chr_region)}
-          cols << ["gVCF #{chr_region.desc}", vcfs.map { |e| e&.vcf_path }]
-          cols << ["bcftools stats #{chr_region.desc}",
-                   vcfs.map { |e| e&.bcftools_stats&.path}]
+          vcf = sample.find_vcf_of_region(e, chr_region)
+          cols << ["gVCF #{chr_region.desc}", vcf&.vcf_path]
+          cols << ["bcftools stats #{chr_region.desc}", vcf&.bcftools_stats&.path]
         end
-        cols.map do |desc, paths|
-          [desc, paths.map { |path| end_time_string_from_path(path) }]
-        end
+        status = cols.all? { |_, path| !path.nil? } ? 'complete' : 'incomplete'
+        status_col = ['status', status]
+        cols.map! { |desc, path| [desc, end_time_string_from_path(path)] }
+        (status_col + cols).to_h
       end
 
       # @param sample     [Sample]
@@ -110,7 +111,7 @@ module JgaAnalysisQC
       # @param path [Pathname]
       # @return     [String]
       def end_time_string_from_path(path)
-        return '-' unless path && path.exist?
+        return '-' unless path
 
         path.mtime.strftime('%Y-%m-%d %H:%M:%S')
       end

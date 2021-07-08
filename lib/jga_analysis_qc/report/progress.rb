@@ -69,7 +69,7 @@ module JgaAnalysisQC
            find_wgs_metrics_of_region(sample, chr_region)&.path]
         end
         cols << [
-          'picard base distribution by cicle',
+          'picard base distribution by cycle',
           sample.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|

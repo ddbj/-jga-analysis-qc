@@ -142,13 +142,15 @@ module JgaAnalysisQC
                               &.map&.to_h do |wgs_metrics|
               [wgs_metrics.chr_region.id, wgs_metrics.coverage_stats.mean]
             end
-            autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION.id] if mean_coverage
-            if autosome_mean_coverage
-              chr_x_normalized_mean_coverage, chr_y_normalized_mean_coverage =
-                [WGS_METRICS_CHR_X_REGION, WGS_METRICS_CHR_Y_REGION].map do |region|
-                next nil unless mean_coverage[region.id]
+            if mean_coverage
+              autosome_mean_coverage = mean_coverage[WGS_METRICS_AUTOSOME_REGION.id]
+              if autosome_mean_coverage
+                chr_x_normalized_mean_coverage, chr_y_normalized_mean_coverage =
+                  [WGS_METRICS_CHR_X_REGION, WGS_METRICS_CHR_Y_REGION].map do |region|
+                  next nil unless mean_coverage[region.id]
 
-                mean_coverage[region.id] / autosome_mean_coverage
+                  mean_coverage[region.id] / autosome_mean_coverage
+                end
               end
             end
             tsv << [

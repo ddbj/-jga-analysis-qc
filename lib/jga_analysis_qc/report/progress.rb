@@ -65,11 +65,11 @@ module JgaAnalysisQC
         cols << ['samtools idxstats', sample.cram&.samtools_idxstats&.path]
         cols << ['samtools flagstat', sample.cram&.samtools_flagstat&.path]
         cols += WGS_METRICS_REGIONS.map do |chr_region|
-          ["WGS metrics #{chr_region.desc}",
+          ["picard WGS metrics #{chr_region.desc}",
            find_wgs_metrics_of_region(sample, chr_region)&.path]
         end
         cols << [
-          'base distribution by cicle',
+          'picard base distribution by cicle',
           sample.cram&.picard_collect_base_distribution_by_cycle&.chart_png_path
         ]
         HAPLOTYPECALLER_REGIONS.each do |chr_region|

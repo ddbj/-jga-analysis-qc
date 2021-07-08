@@ -52,7 +52,7 @@ module JgaAnalysisQC
         header = sample_key_values.first.keys
         type = Array.new(header.length, :string)
         rows = sample_key_values.map do |h|
-          header.map { |k| h[k] }
+          header.map { |k| h[k] || '-' }
         end
         Table.new(header, rows, type)
       end
@@ -66,7 +66,7 @@ module JgaAnalysisQC
         cols << ['samtools flagstat', sample.cram&.samtools_flagstat&.path]
         cols += WGS_METRICS_REGIONS.map do |chr_region|
           ["WGS metrics #{chr_region.desc}",
-            find_wgs_metrics_of_region(sample, chr_region)&.path]
+           find_wgs_metrics_of_region(sample, chr_region)&.path]
         end
         cols << [
           'base distribution by cicle',
@@ -93,9 +93,9 @@ module JgaAnalysisQC
       def find_wgs_metrics_of_region(sample, chr_region)
         sample
           .cram
-          .picard_collect_wgs_metrics_collection
-          .picard_collect_wgs_metrics
-          .find do |wgs_metrics|
+          &.picard_collect_wgs_metrics_collection
+          &.picard_collect_wgs_metrics
+          &.find do |wgs_metrics|
           wgs_metrics.chr_region.id == chr_region.id
         end
       end

@@ -223,6 +223,7 @@ module JgaAnalysisQC
           context ||= binding
           text = erb.result(context)
           text = yield text if block_given?
+          FileUtils.mkpath(out_path.dirname) unless out_path.dirname.exist?
           File.write(out_path, text)
           say_status 'create', out_path, :green
         end

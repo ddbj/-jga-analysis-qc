@@ -65,7 +65,7 @@ module JgaAnalysisQC
               ts_tv_ratio: vcf.bcftools_stats&.ts_tv_ratio
             }
           end
-        end.then { |a| C3js::Data.new(a) }
+        end.compact.then { |a| C3js::Data.new(a) }
       end
 
       # @return [Hash{ ChrRegion => String }]
@@ -90,15 +90,15 @@ module JgaAnalysisQC
         @samples.flat_map do |sample|
           sample
             .cram
-            .picard_collect_wgs_metrics_collection
-            .picard_collect_wgs_metrics.map do |e|
+            &.picard_collect_wgs_metrics_collection
+            &.picard_collect_wgs_metrics&.map do |e|
             h = COVERAGE_STATS_TYPES.keys.map.to_h do |type|
               [type, e.coverage_stats.send(type)]
             end
             h.merge(sample_name: sample.name,
                     chr_region: e.chr_region)
           end
-        end.then { |a| C3js::Data.new(a) }
+        end.compact.then { |a| C3js::Data.new(a) }
       end
 
       # @return [Hash{ ChrRegion => Hash{ Symbol => String } }]
@@ -111,12 +111,12 @@ module JgaAnalysisQC
             coverage_stats_cols.map.to_h do |col|
               bindto = "coverage_stats_#{chr_region.id}_#{col.id}"
               html = data.select(chr_region: chr_region)
-                       .bar_chart_html(
-                         @sample_col,
-                         col,
-                         bindto: bindto,
-                         **@default_chart_params
-                       )
+                         .bar_chart_html(
+                           @sample_col,
+                           col,
+                           bindto: bindto,
+                           **@default_chart_params
+                         )
               [col, html]
             end.then do |htmls_of_chr_region|
               [chr_region, htmls_of_chr_region]
@@ -132,7 +132,7 @@ module JgaAnalysisQC
             'sample_id',
             AUTOSOME_MEAN_COVERAGE_KEY,
             CHR_X_NORMALIZED_MEAN_COVERAGE_KEY,
-            CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY,
+            CHR_Y_NORMALIZED_MEAN_COVERAGE_KEY
           ]
           @samples.each do |sample|
             mean_coverage = sample
@@ -146,6 +146,8 @@ module JgaAnalysisQC
             if autosome_mean_coverage
               chr_x_normalized_mean_coverage, chr_y_normalized_mean_coverage =
                 [WGS_METRICS_CHR_X_REGION, WGS_METRICS_CHR_Y_REGION].map do |region|
+                next nil unless mean_coverage[region.id]
+
                 mean_coverage[region.id] / autosome_mean_coverage
               end
             end

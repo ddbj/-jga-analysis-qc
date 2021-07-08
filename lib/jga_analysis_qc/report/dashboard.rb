@@ -217,7 +217,6 @@ module JgaAnalysisQC
       # @param cmd      [String]
       # @param log_path [Pathname]
       def r_submit(cmd, log_path)
-        ret = nil
         File.open(log_path, 'w') do |f|
           Open3.popen3('R --slave --vanilla') do |i, o, e|
             i.puts cmd if cmd

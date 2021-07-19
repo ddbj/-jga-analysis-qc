@@ -10,7 +10,7 @@ Jga-analysis-qc is a QC part of [jga-analysis](https://github.com/biosciencedbc/
 As a prerequisite, the following should be installed.
 
 * Ruby (>= 3.0.1)
-* R (ggplot2)
+* R with ggplot2 and readr
 
 Jga-analysis-qc is provided as a Ruby gem. Since the gem is not registered in RubyGems currently, it should be built and installed locally.
 
@@ -25,7 +25,7 @@ Alternatively, you can retrieve Docker image from `ghcr.io/tafujino/jga-analysis
 
 ## Usage
 
-Jga-analysis-qc supposes all the samples are under the specific directory (called "project directory") of the follwing structure.
+Jga-analysis-qc supposes all the samples are under a specific directory (called "project directory") of the follwing structure.
 
 ```
 <project directory>/
@@ -57,12 +57,6 @@ Jga-analysis-qc supposes all the samples are under the specific directory (calle
 ### Reporting
 
 ### Flitering
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 

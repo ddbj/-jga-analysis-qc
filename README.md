@@ -1,28 +1,62 @@
-# jga-analysis-QC
+# jga-analysis-qc
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/jga_analysis_qc`. To experiment with that code, run `bin/console` for an interactive prompt.
+Jga-analysis-qc is a QC part of [jga-analysis](https://github.com/biosciencedbc/jga-analysis) workflow. The main features are:
 
-TODO: Delete this and the text above, and describe your gem
+* reporting on CRAM and VCF metrics of each sample
+* filtering and sex estimation based on coverage statistics
 
 ## Installation
 
-Add this line to your application's Gemfile:
+As a prerequisite, the following should be installed.
 
-```ruby
-gem 'jga_analysis_qc'
+* Ruby (>= 3.0.1)
+* R (ggplot2)
+
+Jga-analysis-qc is provided as a Ruby gem. Since the gem is not registered in RubyGems currently, it should be built and installed locally.
+
+```
+$ git clone <THIS REPOSITORY>
+$ cd jga_analysis_qc
+$ bundle install
+$ rake install
 ```
 
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install jga_analysis_qc
+Alternatively, you can retrieve Docker image from `ghcr.io/tafujino/jga-analysis/qc:latest`.
 
 ## Usage
 
-TODO: Write usage instructions here
+Jga-analysis-qc supposes all the samples are under the specific directory (called "project directory") of the follwing structure.
+
+```
+<project directory>/
+  +--<sample0>/
+  |     +--<sample0>.cram
+  |     +--<sample0>.cram.idxstats
+  |     +--<sample0>.cram.flagstat
+  |     +--<sample0>.cram.autosome_PAR_ploidy_2.wgs_metrics
+  |     +--<sample0>.cram.chrX_nonPAR_ploidy_2.wgs_metrics
+  |     +--<sample0>.cram.chrX_nonPAR_ploidy_1.wgs_metrics
+  |     +--<sample0>.cram.chrY_nonPAR_ploidy_1.wgs_metrics
+  |     +--<sample0>.cram.collect_base_dist_by_cycle.chart.png
+  |     +--<sample0>.autosome_PAR_ploidy_2.g.vcf.gz
+  |     +--<sample0>.autosome_PAR_ploidy_2.g.vcf.gz.bcftools-stats
+  |     +--<sample0>.chrX_nonPAR_ploidy_2.g.vcf.gz
+  |     +--<sample0>.chrX_nonPAR_ploidy_2.g.vcf.gz.bcftools-stats
+  |     +--<sample0>.chrX_nonPAR_ploidy_1.g.vcf.gz
+  |     +--<sample0>.chrX_nonPAR_ploidy_1.g.vcf.gz.bcftools-stats
+  |     +--<sample0>.chrY_nonPAR_ploidy_1.g.vcf.gz
+  |     +--<sample0>.chrY_nonPAR_ploidy_1.g.vcf.gz.bcftools-stats
+  +-- <sample1>/
+  |     ...
+  +-- <sample2>/
+  |     ...
+  |
+  .
+```
+
+### Reporting
+
+### Flitering
 
 ## Development
 

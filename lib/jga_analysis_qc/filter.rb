@@ -73,9 +73,11 @@ module JgaAnalysisQC
 
       # @param autosome_mean_coverage [Float]
       # @param param                  [Hash]
-      # @return                       [Symbol] :PASS or :FAIL
+      # @return                       [Symbol] :PASS, :FAIL, :NA
       def filter_by_coverage(autosome_mean_coverage, param)
         h = param[AUTOSOME_MEAN_COVERAGE_KEY]
+        return :NA if autosome_mean_coverage == 'NA'
+
         if autosome_mean_coverage < h[MIN_KEY]
           :FAIL
         elsif h[MAX_KEY] < autosome_mean_coverage
@@ -88,8 +90,11 @@ module JgaAnalysisQC
       # @param chrX_normalized_mean_coverage [Float]
       # @param chrY_normalized_mean_coverage [Float]
       # @param param                         [Hash]
-      # @return                              [Symbol] :MALE, :FEMALE, :OTHER
+      # @return                              [Symbol] :MALE, :FEMALE, :OTHER, :NA
       def estimate_sex(chrX_normalized_mean_coverage, chrY_normalized_mean_coverage, param)
+        return :NA if chrX_normalized_mean_coverage == 'NA' ||
+                      chrY_normalized_mean_coverage == 'NA'
+
         if within_rectangle?(chrX_normalized_mean_coverage, chrY_normalized_mean_coverage, param[MALE_KEY])
           :MALE
         elsif within_rectangle?(chrX_normalized_mean_coverage, chrY_normalized_mean_coverage, param[FEMALE_KEY])

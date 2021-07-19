@@ -10,8 +10,8 @@ gem 'rake', '~> 13.0'
 gem 'redcarpet'
 gem 'thor'
 gem 'rspec', '~> 3.0'
+gem 'rubocop', '~> 1.7'
 
 group :development do
-  gem 'rubocop', '~> 1.7'
   gem 'solargraph'
 end

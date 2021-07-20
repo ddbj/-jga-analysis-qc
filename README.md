@@ -105,7 +105,7 @@ Run `jga-analysis-qc filter` to perform filtering and sex estimation.
 $ jga-analysis-qc filter <project directory> <parameter file>
 ```
 
-After running the command, tabular file `qc.tsv` is created. It has the following three columns.
+After running the command, tabular file `qc.tsv` is created under the project directory. It has the following three columns.
 
 * sample ID
 * filtering result based on autosome_PAR mean coverage (`PASS`/`FAIL`/`NA`)

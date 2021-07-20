@@ -56,14 +56,14 @@ Jga-analysis-qc supposes all the samples are under a specific directory (called 
 
 ### Reporting
 
-YAML File containing list of sample IDs is required to create a report. The file should be array of sample IDs like the folowing.
+A YAML file containing list of sample IDs should be prepared before generating a report. The content should be an array of sample IDs like the folowing.
 
 ```
 ---
 - sample0
 - sample1
 - sample2
-...
+  ...
 ```
 
 Run `jga-analysis report` to generate a report.
@@ -72,7 +72,7 @@ Run `jga-analysis report` to generate a report.
 $ jga-analysis-qc report <project directory> <sample list file>
 ```
 
-Report files are created under the project directory. A file containing coverage information of each sample (named `mean_coverage.tsv`) is also created and used for the filtering step. In `mean_coverage.tsv`, mean coverages of autosome_PAR region and normalized mean coverages of chrY_nonPAR and chrY_nonPAR region are listed. Where coverage information is unavailable is filled with `NA` instead.
+Report files are created under the project directory. A file containing coverage information of each sample (named `mean_coverage.tsv`) is also created (used in the filtering step). In `mean_coverage.tsv`, mean coverages of autosome_PAR region and normalized mean coverages of chrY_nonPAR and chrY_nonPAR region are listed. Where coverage information is unavailable is filled with `NA` instead.
 
 ### Flitering
 
@@ -117,4 +117,4 @@ The gem is available as open source under the terms of the [Apache-2.0](https://
 
 ## Code of Conduct
 
-Everyone interacting in the JgaAnalysisQc project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/biosciencedbc/jga_analysis_qc/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the JgaAnalysisQc project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/biosciencedbc/jga-analysis-qc/blob/master/CODE_OF_CONDUCT.md).

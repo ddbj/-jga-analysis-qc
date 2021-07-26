@@ -16,7 +16,7 @@ module JgaAnalysisQC
       # @param result_dir       [String]
       # @param sample_list_path [String]
       def run(result_dir, sample_list_path)
-        result_dir = Pathname.new(result_dir)
+        result_dir = Pathname.new(result_dir).expand_path
         Render.copy_file(GITHUB_MARKDOWN_CSS_PATH, result_dir)
         samples = YAML.load_file(sample_list_path).map do |sample_name|
           Sample.parse(result_dir, sample_name).tap(&:render)

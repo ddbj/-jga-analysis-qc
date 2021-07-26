@@ -26,8 +26,8 @@ module JgaAnalysisQC
       # @param result_dir [String]
       # @param param_path [String]
       def run(result_dir, param_path)
-        result_dir = Pathname.new(result_dir)
-        param_path = Pathname.new(param_path)
+        result_dir = Pathname.new(result_dir).expand_path
+        param_path = Pathname.new(param_path).expand_path
         mean_coverage = load_mean_coverage(result_dir)
         param = load_param(param_path)
         qc_path = result_dir / FILTER_TABLE_FILENAME

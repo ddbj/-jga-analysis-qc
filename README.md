@@ -72,7 +72,7 @@ Run `jga-analysis report` to generate a report.
 $ jga-analysis-qc report <project directory> <sample list file>
 ```
 
-Report files are created under the project directory. A file containing coverage information of each sample (named `mean_coverage.tsv`) is also created (used in the filtering step). In `mean_coverage.tsv`, mean coverages of autosome_PAR region and normalized mean coverages of chrY_nonPAR and chrY_nonPAR region are listed. Where coverage information is unavailable is filled with `NA` instead.
+Report files are created under the project directory. A file containing coverage information of each sample (named `mean_coverage.tsv`) is also created (used in the filtering step). In `mean_coverage.tsv`, mean coverages of autosome_PAR region and normalized mean coverages of chrX_nonPAR and chrY_nonPAR region are listed. Where coverage information is unavailable is filled with `NA` instead.
 
 ### Flitering
 

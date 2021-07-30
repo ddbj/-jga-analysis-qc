@@ -2,7 +2,7 @@
 
 <% if show_path -%>
 directory: `<%= result_dir.to_s %>`
-<% end -&>
+<% end -%>
 
 * <%= Render.markdown_link_text('Progress and sample reports', progress_html_paths.first.basename&.to_s) %>
 * <%= Render.markdown_link_text('Dashboard', dashboard_html_path.basename.to_s) %>

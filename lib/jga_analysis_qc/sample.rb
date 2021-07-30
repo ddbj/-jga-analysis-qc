@@ -35,7 +35,8 @@ module JgaAnalysisQC
       @cram = cram
     end
 
-    def render
+    # @param show_path [Boolean]
+    def render(show_path: true)
       Report::Render.run(
         TEMPLATE_PREFIX,
         @dir,

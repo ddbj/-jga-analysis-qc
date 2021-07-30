@@ -1,26 +1,26 @@
 ## VCF metrics
 
-<%= @vcf_collection.vcf_path_table&.markdown_text %>
+<%= @vcf_collection.vcf_path_table&.markdown_text if show_path %>
 
 ### bcftools stats
 
-<%= @vcf_collection.bcftools_stats_path_table&.markdown_text %>
+<%= @vcf_collection.bcftools_stats_path_table&.markdown_text if show_path %>
 
 <%= @vcf_collection.bcftools_stats_table&.markdown_text -%>
 
 ## CRAM metrics
 
-<%= @cram&.path_table&.markdown_text %>
+<%= @cram&.path_table&.markdown_text if show_path %>
 
 ### samtools idxstats
 
-<%= @cram&.samtools_idxstats&.path_table&.markdown_text -%>
+<%= @cram&.samtools_idxstats&.path_table&.markdown_text if show_path -%>
 
 <%= @cram&.samtools_idxstats&.num_reads_table&.markdown_text -%>
 
 ### samtools flagstat
 
-<%= @cram&.samtools_flagstat&.path_table&.markdown_text -%>
+<%= @cram&.samtools_flagstat&.path_table&.markdown_text if show_path -%>
 
 <%= @cram&.samtools_flagstat&.num_reads_table&.markdown_text -%>
 
@@ -31,11 +31,13 @@
 <% @cram&.picard_collect_wgs_metrics_collection&.picard_collect_wgs_metrics&.each do |e| -%>
 #### <%= e.chr_region.desc %>
 
-<%= e.path_table.markdown_text %>
+<%= e.path_table.markdown_text if show_path %>
 
+<% if show_path -%>
 ```
 <%= Report::Render.wrap_text(e.command_log) %>
 ```
+<% end -%>
 
 <%= e.territory_table.markdown_text %>
 

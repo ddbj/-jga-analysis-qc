@@ -16,7 +16,8 @@ Jga-analysis-qc is provided as a Ruby gem. Since the gem is not registered in Ru
 
 ```
 $ git clone <THIS REPOSITORY>
-$ cd jga_analysis_qc
+$ git submodule update --init
+$ cd jga-analysis-qc
 $ bundle install
 $ rake install
 ```

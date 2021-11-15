@@ -6,11 +6,13 @@ require 'pathname'
 require_relative 'settings'
 require_relative 'sample/vcf_collection'
 require_relative 'sample/cram'
+require_relative 'sample/fastqc_report'
 require_relative 'report/render'
 
 module JgaAnalysisQC
   class Sample
     TEMPLATE_PREFIX = 'report'
+    FASTQC_DIRNAME = 'fastqc'
 
     # @return [String] sample name
     attr_reader :name
@@ -24,19 +26,25 @@ module JgaAnalysisQC
     # @return [Cram, nil]
     attr_reader :cram
 
+    # @return [Array<FastqcReport>]
+    attr_reader :fastqc_reports
+
     # @param name           [String]
     # @param dir            [Pathname]
     # @param vcf_collection [VcfCollection]
     # @param cram           [Cram, nil]
-    def initialize(name, dir, vcf_collection, cram = nil)
+    # @param fastqc_reports [Array<FastqcReport>]
+    def initialize(name, dir, vcf_collection, cram = nil, fastqc_reports: [])
       @name = name
       @dir = dir
       @vcf_collection = vcf_collection
       @cram = cram
+      @fastqc_reports = fastqc_reports
     end
 
     # @param show_path [Boolean]
-    def render(show_path: true)
+    # @param fastqc    [Boolean]
+    def render(show_path: true, fastqc: false)
       Report::Render.run(
         TEMPLATE_PREFIX,
         @dir,
@@ -48,12 +56,14 @@ module JgaAnalysisQC
     class << self
       # @param result_dir  [Pathname]
       # @param sample_name [String]
+      # @param fastqc      [Boolean]
       # @return            [Sample]
-      def parse(result_dir, sample_name)
+      def parse(result_dir, sample_name, fastqc: false)
         sample_dir = result_dir / sample_name
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
-        Sample.new(sample_name, sample_dir, vcf_collection, cram)
+        fastqc_reports = fastqc ? read_fastqc(sample_dir, sample_name) : []
+        Sample.new(sample_name, sample_dir, vcf_collection, cram, fastqc_reports)
       end
 
       private
@@ -89,6 +99,22 @@ module JgaAnalysisQC
           read_picard_collect_wgs_metrics_collection(sample_dir, cram_basename),
           read_picard_collect_base_distribution_per_cycle(sample_dir, cram_basename)
         )
+      end
+
+      # @param sample_dir  [Pathname]
+      # @param sample_name [String]
+      # @return            [Array<FastqcReport>]
+      def read_fastqc(sample_dir, sample_name)
+        Dir[sample_dir / 'fastqc' / '*'].filter_map do |dir|
+          dir = Pathname.new(dir)
+          next unless dir.directory?
+
+          read_id = dir.basename.to_s
+          html_path = dir / "#{read_id}_fastqc.html"
+          next unless html_path.exist?
+
+          FastqcReport.new(read_id, html_path)
+        end
       end
 
       # @param sample_dir    [Pathname]

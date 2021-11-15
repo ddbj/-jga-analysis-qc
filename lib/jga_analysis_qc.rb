@@ -15,8 +15,9 @@ module JgaAnalysisQC
 
       desc 'report [DIR] [SAMPLE LIST]', 'Produce a report on per-sample workflow results'
       method_option :show_path, :type => :boolean, :default => true
+      method_option :fastqc, :type => :boolean, :default => false
       def report(result_dir, sample_list_path)
-        Report.run(result_dir, sample_list_path, show_path: options[:show_path])
+        Report.run(result_dir, sample_list_path, show_path: options[:show_path], fastqc: options[:fastqc])
       end
 
       desc 'filter [DIR] [PARAMETER]', 'Performs QC according to the given parameters'

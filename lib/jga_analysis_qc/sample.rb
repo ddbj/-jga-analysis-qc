@@ -62,7 +62,7 @@ module JgaAnalysisQC
         sample_dir = result_dir / sample_name
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
-        fastqc_reports = fastqc ? read_fastqc(sample_dir, sample_name) : []
+        fastqc_reports = fastqc ? read_fastqc(result_dir, sample_dir, sample_name) : []
         Sample.new(sample_name, sample_dir, vcf_collection, cram, fastqc_reports: fastqc_reports)
       end
 
@@ -101,10 +101,11 @@ module JgaAnalysisQC
         )
       end
 
+      # @param result_dir  [Pathname]
       # @param sample_dir  [Pathname]
       # @param sample_name [String]
       # @return            [Array<FastqcReport>]
-      def read_fastqc(sample_dir, sample_name)
+      def read_fastqc(result_dir, sample_dir, sample_name)
         Dir[sample_dir / 'fastqc' / '*'].filter_map do |dir|
           dir = Pathname.new(dir)
           next unless dir.directory?
@@ -113,7 +114,7 @@ module JgaAnalysisQC
           html_path = dir / "#{read_id}_fastqc.html"
           next unless html_path.exist?
 
-          FastqcReport.new(read_id, html_path)
+          FastqcReport.new(read_id, html_path.relative_path_from(result_dir))
         end
       end
 

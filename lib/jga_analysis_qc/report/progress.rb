@@ -2,6 +2,7 @@
 
 require 'pathname'
 require 'fileutils'
+require 'stringio'
 
 require_relative '../settings'
 require_relative '../sample'
@@ -84,7 +85,20 @@ module JgaAnalysisQC
           Render.markdown_link_text(sample.name, "#{sample.name}/report.html")
         ]
         status_col = ['status', status]
-        ([sample_id_col, status_col] + cols).to_h
+        left_cols = [sample_id_col, status_col]
+        left_cols += ['FastQC', fastqc_links(sample)]
+        (left_cols + cols).to_h
+      end
+
+      # @param sample [Sample]
+      # @return       [String]
+      def fastqc_links(sample)
+        sio = StringIO.new
+        sample.fastqc_reports.each do |e|
+          sio.puts Render.markdown_link_text(e.read_id, e.html_path)
+          sio.puts
+        end
+        sample.string
       end
 
       # @param sample     [Sample]

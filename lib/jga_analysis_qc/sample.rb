@@ -63,7 +63,7 @@ module JgaAnalysisQC
         vcf_collection = read_vcf_collection(sample_dir, sample_name)
         cram = read_cram(sample_dir, sample_name)
         fastqc_reports = fastqc ? read_fastqc(sample_dir, sample_name) : []
-        Sample.new(sample_name, sample_dir, vcf_collection, cram, fastqc_reports)
+        Sample.new(sample_name, sample_dir, vcf_collection, cram, fastqc_reports: fastqc_reports)
       end
 
       private

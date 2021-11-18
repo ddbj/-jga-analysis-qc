@@ -58,7 +58,7 @@ module JgaAnalysisQC
       end
 
       # @param sample [Sample]
-      # @return       [Hash { String => String }]
+      # @return       [Hash{ String => String }]
       def sample_key_value(sample)
         cols = []
         cols << ['CRAM', sample.cram&.cram_path]

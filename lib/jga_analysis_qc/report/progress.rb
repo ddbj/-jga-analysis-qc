@@ -2,7 +2,6 @@
 
 require 'pathname'
 require 'fileutils'
-require 'stringio'
 
 require_relative '../settings'
 require_relative '../sample'
@@ -93,12 +92,9 @@ module JgaAnalysisQC
       # @param sample [Sample]
       # @return       [String]
       def fastqc_links(sample)
-        sio = StringIO.new
-        sample.fastqc_reports.each do |e|
+        sample.fastqc_reports.map do |e|
           sio.puts Render.markdown_link_text(e.read_id, e.html_path)
-          sio.puts
-        end
-        sio.string
+        end.join("\\n")
       end
 
       # @param sample     [Sample]

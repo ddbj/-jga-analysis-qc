@@ -94,7 +94,7 @@ module JgaAnalysisQC
       def fastqc_links(sample)
         sample.fastqc_reports.map do |e|
           Render.markdown_link_text(e.read_id, e.html_path)
-        end.join('  ') # newline
+        end.join('<br />')
       end
 
       # @param sample     [Sample]

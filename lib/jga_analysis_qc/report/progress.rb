@@ -93,7 +93,7 @@ module JgaAnalysisQC
       # @return       [String]
       def fastqc_links(sample)
         sample.fastqc_reports.map do |e|
-          sio.puts Render.markdown_link_text(e.read_id, e.html_path)
+          Render.markdown_link_text(e.read_id, e.html_path)
         end.join("\\\n")
       end
 

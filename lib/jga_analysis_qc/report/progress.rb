@@ -86,7 +86,7 @@ module JgaAnalysisQC
         ]
         status_col = ['status', status]
         left_cols = [sample_id_col, status_col]
-        left_cols += ['FastQC', fastqc_links(sample)]
+        left_cols << ['FastQC', fastqc_links(sample)]
         (left_cols + cols).to_h
       end
 

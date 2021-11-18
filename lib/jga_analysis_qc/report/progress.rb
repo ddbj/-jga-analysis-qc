@@ -98,7 +98,7 @@ module JgaAnalysisQC
           sio.puts Render.markdown_link_text(e.read_id, e.html_path)
           sio.puts
         end
-        sample.string
+        sio.string
       end
 
       # @param sample     [Sample]

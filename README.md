@@ -99,9 +99,9 @@ In addition to the directure structure above, FastQC results are supposed to be 
   |     +--fastqc/
   |           +--<read0>/
   |                 +--<read0>_fastqc.html
-  |           +--<read1>
+  |           +--<read1>/
   |                 +--<read1>_fastqc.html
-  |           +--<read2>
+  |           +--<read2>/
   |                 +--<read2>_fastqc.html
   |           ...
   +-- <sample1>/

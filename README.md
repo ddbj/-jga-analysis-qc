@@ -91,7 +91,7 @@ If you have [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 $ jga-analysis-qc report --fastqc <project directory> <sample list file>
 ```
 
-In addition to the directure structure above, FastQC results are supposed to be placed in the structure like the following.
+In addition to the directory structure above, FastQC results are supposed to be placed in the structure like the following.
 
 ```
 <project directory>/

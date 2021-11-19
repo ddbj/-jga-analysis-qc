@@ -96,8 +96,8 @@ In addition to the directure structure above, FastQC results are supposed to be 
 ```
 <project directory>/
   +--<sample0>/
-  |     +--<fastqc>
-  |           +--<read0>
+  |     +--fastqc/
+  |           +--<read0>/
   |                 +--<read0>_fastqc.html
   |           +--<read1>
   |                 +--<read1>_fastqc.html
@@ -105,10 +105,10 @@ In addition to the directure structure above, FastQC results are supposed to be 
   |                 +--<read2>_fastqc.html
   |           ...
   +-- <sample1>/
-  |     +--<fastqc>
+  |     +--fastqc/
   |     ...
   +-- <sample2>/
-  |     +--<fastqc>
+  |     +--fastqc/
   |     ...
   |
   .

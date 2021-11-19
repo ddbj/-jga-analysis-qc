@@ -83,7 +83,7 @@ If file path information of the original data is unnecessary, put `--no-show-pat
 $ jga-analysis-qc report --no-show-path <project directory> <sample list file>
 ```
 
-#### Add links to FastQC reports of sequencing data
+#### Adding links to FastQC reports of sequencing data
 
 If you have [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) results of the sequencing data, you can add a hyperlink to each FastQC report by `--fastqc` option.
 

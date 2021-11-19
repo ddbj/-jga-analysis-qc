@@ -75,6 +75,45 @@ $ jga-analysis-qc report <project directory> <sample list file>
 
 Report files are created under the project directory. A file containing coverage information of each sample (named `mean_coverage.tsv`) is also created (used in the filtering step). In `mean_coverage.tsv`, mean coverages of autosome_PAR region and normalized mean coverages of chrX_nonPAR and chrY_nonPAR region are listed. Where coverage information is unavailable is filled with `NA` instead.
 
+#### Hiding file paths
+
+If file path information of the original data is unnecessary, put `--no-show-path` after the command.
+
+```
+$ jga-analysis-qc report --no-show-path <project directory> <sample list file>
+```
+
+#### Add links to FastQC reports of sequencing data
+
+If you have [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) results of the sequencing data, you can add a hyperlink to each FastQC report by `--fastqc` option.
+
+```
+$ jga-analysis-qc report --fastqc <project directory> <sample list file>
+```
+
+In addition to the directure sturecute above, FastQC results are supposed to be placed in the structure like the following.
+
+```
+<project directory>/
+  +--<sample0>/
+  |     +--<fastqc>
+  |           +--<read0>
+  |                 +--<read0>_fastqc.html
+  |           +--<read1>
+  |                 +--<read1>_fastqc.html
+  |           +--<read2>
+  |                 +--<read2>_fastqc.html
+  |           ...
+  +-- <sample1>/
+  |     +--<fastqc>
+  |     ...
+  +-- <sample2>/
+  |     +--<fastqc>
+  |     ...
+  |
+  .
+```
+
 ### Flitering
 
 After reporting, filtering and sex estimation based on coverage information are performed. Parameters should be specified in YAML format like the following.

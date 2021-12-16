@@ -22,7 +22,7 @@ $ bundle install
 $ rake install
 ```
 
-Alternatively, you can retrieve Docker image from `ghcr.io/tafujino/jga-analysis/qc:latest`.
+Alternatively, you can retrieve Docker image from `ghcr.io/biosciencedbc/jga-analysis-qc:1.0.0`
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # jga-analysis-qc
 
-Jga-analysis-qc is the QC part of [jga-analysis](https://github.com/biosciencedbc/jga-analysis) workflow. The main features are:
+Jga-analysis-qc is the QC part of [jga-analysis](https://github.com/ddbj/jga-analysis) workflow. The main features are:
 
 * reporting on CRAM and VCF metrics of each sample
 * filtering and sex estimation based on coverage statistics
@@ -22,7 +22,7 @@ $ bundle install
 $ rake install
 ```
 
-Alternatively, you can retrieve Docker image from `ghcr.io/biosciencedbc/jga-analysis-qc:1.0.0`
+Alternatively, you can retrieve Docker image from `ghcr.io/ddbj/jga-analysis-qc:1.0.0`
 
 ## Usage
 
